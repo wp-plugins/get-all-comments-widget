@@ -4,7 +4,7 @@ Plugin Name: Get All Comments Widget
 Plugin URI: http://kanedo.net/projekte/recent-comments-across-sites
 Description: A widget to display all recent comments across all sites of a multi site wordpress installation
 Author: Gabriel Bretschner
-Version: 0.1
+Version: 1.0
 Author URI: http://kanedo.net
 */
 class CommentsSite extends WP_Widget {
