@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Get All Comments Widget
-Plugin URI: http://kanedo.net/projekte/recent-comments-across-sites
+Plugin URI: http://kanedo.net/projekte/get-all-comments-widget/
 Description: A widget to display all recent comments across all sites of a multi site wordpress installation
 Author: Gabriel Bretschner
 Version: 1.0
@@ -53,7 +53,7 @@ class CommentsSite extends WP_Widget {
 					 echo $comment->comment_author;
 				} 
 					echo " ";
-					echo _e("at", 'getallcommentswidget');
+					echo _e("at", 'get-all-comments-widget');
 				?>  <a href="<?php echo get_blog_permalink($comment->blog_id, $comment->ID);?>"> <?php echo $comment->post_title; ?></a>
 				</li>
 				<?php
@@ -74,9 +74,9 @@ class CommentsSite extends WP_Widget {
 		$title = strip_tags($instance['title']);
 		$count = strip_tags($instance['count']);
 		?>
-		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php echo _e('Title', 'getallcommentswidget');?>: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo attribute_escape($title); ?>" /></label></p>
-		<p><label for="<?php echo $this->get_field_id('count'); ?>"><?php echo _e('Number of comments shown', 'getallcommentswidget') ?>: <input class="widefat" id="<?php echo $this->get_field_id('count'); ?>" name="<?php echo $this->get_field_name('count'); ?>" type="text" value="<?php echo attribute_escape($count); ?>" /></label></p>
-		<p><small><?php echo _e('Visit', 'getallcommentswidget'); ?>:&nbsp;<a href="http://kanedo.net?pk_campaign=Plugin&pk_keyword=getallcommentswidget">kanedo.net</a></small></p>
+		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php echo _e('Title', 'get-all-comments-widget');?>: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo attribute_escape($title); ?>" /></label></p>
+		<p><label for="<?php echo $this->get_field_id('count'); ?>"><?php echo _e('Number of comments shown', 'get-all-comments-widget') ?>: <input class="widefat" id="<?php echo $this->get_field_id('count'); ?>" name="<?php echo $this->get_field_name('count'); ?>" type="text" value="<?php echo attribute_escape($count); ?>" /></label></p>
+		<p><small><?php echo _e('Visit', 'get-all-comments-widget'); ?>:&nbsp;<a href="http://kanedo.net?pk_campaign=Plugin&pk_keyword=get-all-comments-widget">kanedo.net</a></small></p>
 		<?php
 	}
 }
@@ -84,6 +84,6 @@ class CommentsSite extends WP_Widget {
 function register_CommentsSite(){
 	register_widget('CommentsSite');
 	$plugin_dir = basename(dirname(__FILE__));
-	load_plugin_textdomain( 'getallcommentswidget', false, $plugin_dir );
+	load_plugin_textdomain( 'get-all-comments-widget', $plugin_dir."/language"/*'wp-content/plugins/all-comments-widget/language'*/);
 }
 add_action('init', 'register_CommentsSite', 1);

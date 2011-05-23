@@ -1,0 +1,35 @@
+# Copyright (C) 2010 
+# This file is distributed under the same license as the  package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Get All Comments Widget\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/get-all-comments-widget\n"
+"POT-Creation-Date: 2011-05-23 10:52:13+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2011-05-23 13:13+0100\n"
+"Last-Translator: Gabriel Bretschner <info@kanedo.net>\n"
+"Language-Team: Gabriel Bretschner <info@kanedo.net>\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: getRecentCommentsFromAllSites.php:56
+msgid "at"
+msgstr "bei"
+
+#: getRecentCommentsFromAllSites.php:77
+msgid "Title"
+msgstr "Titel"
+
+#: getRecentCommentsFromAllSites.php:78
+msgid "Number of comments shown"
+msgstr "Anzahl der dargestellten Kommentare"
+
+#: getRecentCommentsFromAllSites.php:79
+msgid "Visit"
+msgstr "Besuche"
+
