@@ -83,7 +83,7 @@ class CommentsSite extends WP_Widget {
 
 function register_CommentsSite(){
 	register_widget('CommentsSite');
-	$plugin_dir = basename(dirname(__FILE__));
+	$plugin_dir = WP_PLUGIN_URL."/".basename(dirname(__FILE__));	
 	load_plugin_textdomain( 'get-all-comments-widget', $plugin_dir."/language"/*'wp-content/plugins/all-comments-widget/language'*/);
 }
 add_action('init', 'register_CommentsSite', 1);
