@@ -116,8 +116,8 @@ class CommentsSite extends WP_Widget {
 		$title = strip_tags($instance['title']);
 		$count = strip_tags($instance['count']);
 		?>
-		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php echo _e('Title', 'get-all-comments-widget');?>: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo attribute_escape($title); ?>" /></label></p>
-		<p><label for="<?php echo $this->get_field_id('count'); ?>"><?php echo _e('Number of comments shown', 'get-all-comments-widget') ?>: <input class="widefat" id="<?php echo $this->get_field_id('count'); ?>" name="<?php echo $this->get_field_name('count'); ?>" type="text" value="<?php echo attribute_escape($count); ?>" /></label></p>
+		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php echo _e('Title', 'get-all-comments-widget');?>: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" /></label></p>
+		<p><label for="<?php echo $this->get_field_id('count'); ?>"><?php echo _e('Number of comments shown', 'get-all-comments-widget') ?>: <input class="widefat" id="<?php echo $this->get_field_id('count'); ?>" name="<?php echo $this->get_field_name('count'); ?>" type="text" value="<?php echo esc_attr($count); ?>" /></label></p>
 		<p><small><?php echo _e('Visit', 'get-all-comments-widget'); ?>:&nbsp;<a href="http://kanedo.net?pk_campaign=Plugin&pk_keyword=get-all-comments-widget">kanedo.net</a></small></p>
 		<?php
 	}
