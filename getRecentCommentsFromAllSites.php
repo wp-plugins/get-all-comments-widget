@@ -8,61 +8,100 @@ Version: 1.2.1
 Author URI: http://kanedo.net
 */
 class CommentsSite extends WP_Widget {
+  static function isValidEnviroment(){
+    if(!is_multisite()){
+      return false;
+    }
+    return true;
+  }
+
+
 	function CommentsSite() {
 		$widget_ops = array('classname' => 'widgets_comments_across_all_sites', 'description' => 'Display comments from all sites' );
 		$this->WP_Widget('comments_site', 'Comments Site', $widget_ops);
 	}
+
+  /**
+   * render the actual widget
+   */
 	function widget($args, $instance) {
 		extract($args, EXTR_SKIP);
-		global $wpdb;
-		$number = 8; // maximum number of comments to display
-		$selects = array();
-		$sites = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM wp_blogs ORDER BY blog_id" ) );
-		foreach ($sites as $blog){
-			if($blog->blog_id == 1){
-				$pre = "";
-			}else{
-				$pre = $blog->blog_id."_";
-			}
-			// select only the fields you need here!
-			$selects[] = "(SELECT ID, comment_post_ID, comment_author, comment_author_email, comment_date_gmt, comment_author_url, comment_content, post_title, {$blog->blog_id} as blog_id FROM {$wpdb->base_prefix}{$pre}comments
-			  LEFT JOIN {$wpdb->base_prefix}{$pre}posts
+		$title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
+		echo $before_widget;
+		echo $before_title . $title . $after_title;
+    echo("<ul>");
+    foreach ($this->getComments($instance['count']) as $comment) {
+      ?>
+      <li>
+        <?php if ($comment->comment_author_url != "") { ?>
+          <a href="<?php echo $comment->comment_author_url; ?>"><?php echo $comment->comment_author; ?></a>
+        <?php
+        } else {
+          echo $comment->comment_author;
+        }
+        echo " ";
+        echo _e("on", 'get-all-comments-widget');
+        ?>  <a
+            href="<?php echo get_blog_permalink($comment->blog_id, $comment->ID); ?>"> <?php echo $comment->post_title; ?></a>
+      </li>
+    <?php
+    }
+    echo("</ul>");
+    echo $after_widget;
+	}
+
+  /**
+   * retrieve comments accross all blogs of a multisite
+   * returns an array ob Objects
+   * @param int (optional) number of comments to be retrieved (default: 10)
+   * @return array|NULL
+   */
+  function getComments($count = 10){
+    global $wpdb;
+
+    $selects = array();
+    $sites   = array();
+    if(function_exists('wp_get_sites')){
+      $sites = wp_get_sites();
+    }
+    foreach ($sites as $blog){
+      $selects[] = $this->getSQLStatementForBlogId($blog['blog_id'], $count); // real number is (number * # of blogs)
+    }
+
+    return $wpdb->get_results(implode(" UNION ALL ", $selects)." ORDER BY comment_date_gmt DESC LIMIT 0, {$count}", OBJECT);
+  }
+
+  /**
+   * returns prepared SQL Statement to get all comments from blog ID
+   * @param int $id the blog id @see wp_get_sites()
+   * @param int $number number of comments per blog
+   * @return string SQL Query
+   * @protected
+   */
+  function getSQLStatementForBlogId( $id, $number = 0 ){
+    global $wpdb;
+
+    if($id == 1){
+      $pre = "";
+    }else{
+      $pre = $id."_";
+    }
+    $post_table_name = $wpdb->base_prefix.$pre."posts";
+    $comments_table_name = $wpdb->base_prefix.$pre."comments";
+
+    // select only the fields you need here!
+    return $wpdb->prepare("(SELECT {$post_table_name}.`ID`, comment_post_ID, comment_author, comment_author_email, comment_date_gmt, comment_author_url, comment_content, {$post_table_name}.`post_title`, %d as blog_id FROM {$comments_table_name}
+			  LEFT JOIN {$post_table_name}
 			  ON comment_post_id = id
 			  WHERE post_status = 'publish'
 				AND post_password = ''
 				AND comment_approved = '1'
 				AND comment_type = ''
-			   ORDER BY comment_date_gmt DESC LIMIT {$number})"; // real number is (number * # of blogs)
-		}
-	 	
-	 		$count = $instance['count'];
-			$comments = $wpdb->get_results(implode(" UNION ALL ", $selects)." ORDER BY comment_date_gmt DESC LIMIT 0, {$count}", OBJECT);
-			
-			$title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
-			
-			echo $before_widget;			
-			echo $before_title . $title . $after_title;	
-			echo("<ul>");		
-			foreach($comments as $comment){
-				?>
-				<li>
-				<?php if($comment->comment_author_url != ""){?>
-					<a href="<?php echo $comment->comment_author_url; ?>"><?php echo $comment->comment_author; ?></a>
-					<?php
-				}else{
-					 echo $comment->comment_author;
-				} 
-					echo " ";
-					echo _e("at", 'get-all-comments-widget');
-				?>  <a href="<?php echo get_blog_permalink($comment->blog_id, $comment->ID);?>"> <?php echo $comment->post_title; ?></a>
-				</li>
-				<?php
-				
-			}
-			echo("</ul>");
-			echo $after_widget;
+			   ORDER BY comment_date_gmt DESC LIMIT %d)",
+        $id,
+        $number); // real number is (number * # of blogs)
+  }
 
-	}
 	function update($new_instance, $old_instance) {
 		$instance = $old_instance;
 		$instance['title'] = strip_tags($new_instance['title']);
@@ -70,6 +109,9 @@ class CommentsSite extends WP_Widget {
 		return $instance;
 	}
 	function form($instance) {
+    if(!self::isValidEnviroment()){
+      return;
+    }
 		$instance = wp_parse_args( (array) $instance, array( 'title' => '', 'count' => ''));
 		$title = strip_tags($instance['title']);
 		$count = strip_tags($instance['count']);
@@ -80,10 +122,13 @@ class CommentsSite extends WP_Widget {
 		<?php
 	}
 }
-
+//is_multisite
 function register_CommentsSite(){
+  if(!CommentsSite::isValidEnviroment()){
+    echo "<div class='error'><p><strong>Get All Comments Widget</strong>: your site need to be a multisite installation in order for the plugin to work</p></div>";
+    return;
+  }
 	register_widget('CommentsSite');
-	$plugin_dir = WP_PLUGIN_URL."/".basename(dirname(__FILE__));	
-	load_plugin_textdomain( 'get-all-comments-widget', $plugin_dir."/language"/*'wp-content/plugins/all-comments-widget/language'*/);
+	load_plugin_textdomain( 'get-all-comments-widget', false, dirname( plugin_basename( __FILE__ ) ) ."/language");
 }
 add_action('init', 'register_CommentsSite', 1);
