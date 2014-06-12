@@ -129,7 +129,6 @@ function register_CommentsSite(){
     return;
   }
 	register_widget('CommentsSite');
-	$plugin_dir = WP_PLUGIN_URL."/".basename(dirname(__FILE__));	
-	load_plugin_textdomain( 'get-all-comments-widget', $plugin_dir."/language"/*'wp-content/plugins/all-comments-widget/language'*/);
+	load_plugin_textdomain( 'get-all-comments-widget', false, dirname( plugin_basename( __FILE__ ) ) ."/language");
 }
 add_action('init', 'register_CommentsSite', 1);
