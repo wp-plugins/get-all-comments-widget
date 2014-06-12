@@ -4,7 +4,7 @@ Donate link: http://kanedo.net
 Tags: comment, multi site, widget, display
 Requires at least: 3.7
 Tested up to: 3.9.1
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 
 Creates a widget which lists all comments across all sites of a multi site wordpress installation
 
@@ -19,8 +19,11 @@ This widget displays **all** comments on **all** blogs on your multi site wordpr
 
 == Changelog ==
 
+= 1.3.2 =
+released 2014-07-12
+replaced attribute_escape with esc_attr. sorry
 
-= 1.3 =
+= 1.3.1 =
 released 2014-07-12
 I always forget to update one of the version numbers so this is version *.*.1
 for relevant changes see 1.3
